@@ -45,6 +45,8 @@ $container['view'] = function ($container) {
 
     $view->getEnvironment()->addGlobal('flash', $container->flash);
 
+    $view->getEnvironment()->addGlobal("current_path", $container->get('request')->getUri()->getPath());
+
     return $view;
 };
 
@@ -72,7 +74,10 @@ $container['flash'] = function ($container) {
 
 // CSRF Guard
 $container['csrf'] = function ($container) {
-    return new \Slim\Csrf\Guard;
+    $guard = new \Slim\Csrf\Guard;
+    $guard->setPersistentTokenMode(true);
+
+    return $guard;
 };
 
 // Auth

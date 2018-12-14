@@ -1,0 +1,91 @@
+{% extends '/templates/app.twig' %}
+
+{% block content %}
+    <div class="row justify-content-md-center">
+        <div class="col-md-6">
+            <div class="card center-block">
+                <div class="card-header">
+                    Settings
+                </div>
+                <div class="card-body"
+                     ng-app="settings"
+                     data-ng-init="init('{{ auth.user.two_step_enabled ? 'on' : 'off' }}')"
+                     ng-controller="setting-controller">
+
+                    <div class="alert alert-success alert-dismissible fade show" ng-show="success && !warning">
+                        <strong>Successfully updated!</strong>
+                        <button type="button" class="close" ng-click="success=false">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="alert alert-warning alert-dismissible fade show" ng-show="!success && warning">
+                        <strong>Oops! Something went wrong.</strong>
+                        <button type="button" class="close" ng-click="waring=false">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3{{ errors.email ? ' has-error' : ''}}">
+                            <span class="h5">Two-factor Authentication</span>
+                            <label class="switch float-right">
+                                <input type="checkbox" name="2fa"
+                                       ng-model="twoFactor"
+                                       ng-true-value="'on'"
+                                       ng-false-value="'off'"
+                                       ng-change="stateChanged()">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group-sm mb-3" ng-repeat="data in data">
+                        <div class="card">
+                            <div class="card-body p-2">
+                                <div class="d-flex flex-row">
+                                    <span class="h6">{{ '{{ data.question }}' }}</span>
+                                    <button type="button" class="ml-auto mr-2 close" ng-click="removeData(data.id)">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                                <p class="mb-1">{{ '{{ data.answer }}' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="loader mb-3" ng-show="loading"></div>
+
+                    <div class="form-group" ng-show="questions.length > 0">
+                        <label class="lead">Select a question</label>
+                        <select class="custom-select custom-select-sm mb-1" data-placeholder="Select"
+                                ng-model="selected"
+                                ng-options="question as question.description for question in questions track by question.id"
+                                ng-change="answer=''"
+                                ng-required>
+                        </select>
+                        <div class="input-group-sm mb-1">
+                            <input type="text" class="form-control" placeholder="Your answer"
+                                   ng-model="answer"
+                                   ng-required>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm"
+                            ng-click="pushData()">
+                            Add Question</button>
+                    </div>
+
+                    <button class="btn btn-primary btn-block" type="button"
+                            ng-init="submitting = false"
+                            ng-disabled="submitting || !((twoFactor !== 'on') || (twoFactor === 'on' && data.length > 0))"
+                            ng-click="submit()">
+                        <span ng-show="!submitting">Update Settings</span>
+                        <span ng-show="submitting">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                            Updating...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

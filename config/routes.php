@@ -8,7 +8,6 @@ use \Psr\Http\Message\ResponseInterface as Response;
 $app->get('/', '\App\Controllers\HomeController:index')
     ->setName('home');
 
-
 $app->group('', function () {
 
     $this->get('/register', '\App\Controllers\Auth\RegisterController:index')
@@ -23,6 +22,14 @@ $app->group('', function () {
 
 
 $app->group('', function () {
+
+    $this->get('/settings', 'App\Controllers\User\SettingController:index')
+        ->setName('user.settings');
+    $this->post('/settings', 'App\Controllers\User\SettingController:update')
+        ->setName('user.settings');
+
+    $this->get('/api/q', 'App\Controllers\User\SettingController:getQuestions')
+        ->setName('2fa.getQuestions');
 
     $this->any('/logout', 'App\Controllers\Auth\LogoutController:index')
         ->setName('auth.logout');

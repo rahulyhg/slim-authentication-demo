@@ -19,11 +19,24 @@ class CsrfViewMiddleware extends Middleware
         $nameKey = $this->container->csrf->getTokenNameKey();
         $valueKey = $this->container->csrf->getTokenValueKey();
 
+        $tokenName = $this->container->csrf->getTokenName();
+        $tokenValue = $this->container->csrf->getTokenValue();
+
+        $this->container->view->getEnvironment()
+            ->addGlobal('csrf_name_key', $nameKey);
+        $this->container->view->getEnvironment()
+            ->addGlobal('csrf_value_key', $valueKey);
+
+        $this->container->view->getEnvironment()
+            ->addGlobal('csrf_token_name', $tokenName);
+        $this->container->view->getEnvironment()
+            ->addGlobal('csrf_token_value', $tokenValue);
+
         $this->container->view->getEnvironment()
             ->addGlobal('csrf', [
                 'field' => '
-                    <input type="hidden" name="' . $nameKey .'" value="' . $this->container->csrf->getTokenName() .'">
-                    <input type="hidden" name="' . $valueKey .'" value="' . $this->container->csrf->getTokenValue() .'">
+                    <input type="hidden" name="' . $nameKey .'" value="' . $tokenName .'">
+                    <input type="hidden" name="' . $valueKey .'" value="' . $tokenValue .'">
                 ',
             ]);
 

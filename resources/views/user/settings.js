@@ -71,9 +71,9 @@ app.controller('setting-controller', function($scope, $http) {
                     throw data.error;
                 }
             }).catch(function (err) {
-            $scope.twoFactor = 'off';
-        }).finally(function () {
-            $scope.loading = false;
+                $scope.twoFactor = 'off';
+            }).finally(function () {
+                $scope.loading = false;
         });
     };
 

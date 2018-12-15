@@ -75,8 +75,6 @@ class SettingController extends Controller
         } catch (\Illuminate\Database\QueryException $exception) {
             throw new \Exception("Query Exception: " . $exception->getMessage());
         } catch (\Exception $exception) {
-            var_dump($exception->getMessage());
-            die();
             $exceptionMessage = $exception->getMessage();
             // TODO: Log exception
 
@@ -108,7 +106,9 @@ class SettingController extends Controller
         );
 
         if ($userTwoStep === 1) {
-            $userQuestions = User::find($userId)->questions()->with('question')->get()->toArray();
+            $userQuestions = User::find($userId)
+                ->questions()->with('question')
+                ->get()->toArray();
 
             $selected = array();
             foreach ($userQuestions as $key => $value) {
@@ -122,6 +122,7 @@ class SettingController extends Controller
             $json['selected'] = $selected;
         }
 
+        sleep(2);
         return $response->withJSON(json_decode(json_encode($json)));
     }
 }

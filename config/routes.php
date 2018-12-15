@@ -35,3 +35,7 @@ $app->group('', function () {
         ->setName('auth.logout');
 
 })->add(new \App\Middleware\AuthMiddleware($container));
+
+$app->get('/two-step', 'App\Controllers\User\TwoStepController:index')
+    ->setName('two_factor_step')
+    ->add(new \App\Middleware\TwoStepCheckMiddleware($container));

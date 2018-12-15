@@ -20,6 +20,9 @@ class AuthMiddleware extends Middleware
             return $response->withRedirect($this->container->router->pathFor('auth.login'));
         }
 
+        if (isset($_SESSION['temp']['two_step'], $_SESSION['temp']['user_id']))
+            unset($_SESSION['temp']['two_step'], $_SESSION['temp']['user_id']);
+
         $response = $next($request, $response);
         return $response;
     }

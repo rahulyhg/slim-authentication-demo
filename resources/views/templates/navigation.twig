@@ -23,7 +23,7 @@
                 <form style="display: none;" id="logout-form" action="{{ path_for('auth.logout') }}" method="post">
                     {{ csrf.field | raw }}
                 </form>
-            {% else %}
+            {% elseif current_path is not same as(path_for('two_factor_step')) %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path_for('auth.login') }}">Login</a>
                 </li>

@@ -10,7 +10,6 @@ namespace App\Controllers\Auth;
 
 
 use App\Controllers\Controller;
-use App\Models\User;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -34,9 +33,15 @@ class LoginController extends Controller
             return $response->withRedirect($this->router->pathFor('auth.login'));
         }
 
+        if ($user->user()->is_blocked === 1) {
+            $_SESSION['errors'] = ['email' => array('Your account has been temporarily locked.')];
+            return $response->withRedirect($this->router->pathFor('auth.login'));
+        }
+
         if ($user->user()->two_step_enabled) {
             $_SESSION['temp']['two_step'] = true;
             $_SESSION['temp']['user_id'] = $user->user()->id;
+            $_SESSION['temp']['attempt'] = 0;
             return $response->withRedirect($this->router->pathFor('two_factor_step'));
         }
 

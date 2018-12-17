@@ -9,6 +9,7 @@
 namespace App;
 
 
+use App\Models\LoginAttempt;
 use App\Models\User;
 
 class Auth
@@ -36,6 +37,11 @@ class Auth
 
             if (! $this->user instanceof User) {
                 unset($_SESSION['user_id']);
+            }
+
+            if ($this->user->is_blocked === 1) {
+                unset($_SESSION['user_id']);
+                return false;
             }
 
             return $this->user || false;
@@ -66,12 +72,20 @@ class Auth
             return $this;
         }
 
+        LoginAttempt::create([
+            'user_id' => $user->id,
+            'failed' => 1,
+        ]);
+
         return false;
     }
 
     public function login()
     {
         if (isset($this->user) && $this->user instanceof User) {
+            LoginAttempt::create([
+                'user_id' => $this->user->id,
+            ]);
             $_SESSION['user_id'] = $this->user->id;
         }
 
@@ -81,7 +95,7 @@ class Auth
     public function authorize($userId)
     {
         if (User::find($userId)) {
-            $_SESSION['user_id'] = $this->user->id;
+            $_SESSION['user_id'] = $userId;
         }
     }
 

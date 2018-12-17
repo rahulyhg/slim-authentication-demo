@@ -16,7 +16,7 @@ class TwoStepCheckMiddleware extends Middleware
 {
     public function __invoke(Request $request, Response $response, callable $next)
     {
-        if (! $this->container->auth->check() && isset($_SESSION['temp']['two_step'], $_SESSION['temp']['user_id'])) {
+        if (! $this->container->auth->check() && isset($_SESSION['temp']['two_step'], $_SESSION['temp']['user_id'], $_SESSION['temp']['attempt'])) {
 
             $response = $next($request, $response);
             return $response;

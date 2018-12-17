@@ -25,8 +25,7 @@ $app->group('', function () {
 
     $this->get('/settings', 'App\Controllers\User\SettingController:index')
         ->setName('user.settings');
-    $this->post('/settings', 'App\Controllers\User\SettingController:update')
-        ->setName('user.settings');
+    $this->post('/settings', 'App\Controllers\User\SettingController:update');
 
     $this->get('/api/q', 'App\Controllers\User\SettingController:getQuestions')
         ->setName('2fa.getQuestions');
@@ -36,6 +35,10 @@ $app->group('', function () {
 
 })->add(new \App\Middleware\AuthMiddleware($container));
 
-$app->get('/two-step', 'App\Controllers\User\TwoStepController:index')
-    ->setName('two_factor_step')
-    ->add(new \App\Middleware\TwoStepCheckMiddleware($container));
+$app->group('/two-step', function () {
+
+    $this->get('', 'App\Controllers\User\TwoStepController:index')
+        ->setName('two_factor_step');
+    $this->post('', 'App\Controllers\User\TwoStepController:verify');
+
+})->add(new \App\Middleware\TwoStepCheckMiddleware($container));
